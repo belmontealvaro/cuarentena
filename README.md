@@ -36,4 +36,8 @@ El juego está hecho con HTML y JavaScript sin dependencias ni compilación. Tod
 
 ## Licencia
 
-Código abierto bajo licencia [MIT](LICENSE): puedes usarlo, modificarlo y compartirlo citando al autor.
+Cuarentena se publica bajo la licencia [PolyForm Noncommercial 1.0.0](LICENSE.md): el código es público y puedes jugarlo, estudiarlo, modificarlo y compartirlo, pero **no usarlo con fines comerciales** (venderlo, cobrar por él, meterle anuncios o publicarlo en tiendas de pago). Cualquier copia o versión modificada debe conservar el aviso de autoría y esta misma licencia.
+
+© 2026 Álvaro Belmonte. Para cualquier uso comercial hace falta permiso expreso del autor.
+
+Las versiones publicadas antes del 18 de noviembre de 2026 se distribuyeron con licencia MIT.
