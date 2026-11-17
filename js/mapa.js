@@ -144,6 +144,9 @@ CQ.mapa = (() => {
 
   function abrirFicha(indice, numero, estado, boton) {
     const nodo = CQ.mundo.nodos[indice];
+    raiz.scrollTo({ top: parseFloat(boton.style.top) - raiz.clientHeight * 0.3, behavior: 'smooth' });
+    // En pantallas bajas la ficha va a un lado (CSS): al lado contrario del nivel, para no taparlo.
+    ficha.classList.toggle('izquierda', parseFloat(boton.style.left) > raiz.clientWidth / 2);
     if (estado === 'bloqueado') {
       boton.classList.remove('no'); void boton.offsetWidth; boton.classList.add('no');
       pintarFicha(`<h2>Nivel ${numero}</h2><p>Próximamente. Este tramo del camino aún está en obras.</p>`, {});
@@ -237,7 +240,8 @@ CQ.mapa = (() => {
     if (lienzo.width !== Math.round(w * dpr) || lienzo.height !== Math.round(h * dpr)) {
       lienzo.width = Math.round(w * dpr); lienzo.height = Math.round(h * dpr); calcularPuntos();
     }
-    const desplazado = raiz.scrollTop, zonas = CQ.mundo.zonas, altoZona = CQ.mundo.altoZona;
+    // El lienzo es "sticky": deja de seguir al scroll en el hueco final, así que el desplazamiento se limita igual.
+    const desplazado = Math.min(raiz.scrollTop, altoMundo() - h), zonas = CQ.mundo.zonas, altoZona = CQ.mundo.altoZona;
     ctx.setTransform(dpr, 0, 0, dpr, 0, -desplazado * dpr);
 
     // Zonas de arriba abajo; cada una remata su borde superior con una onda sobre la anterior.

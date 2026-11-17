@@ -97,8 +97,9 @@ body {
 
 /* ---------- Paneles ---------- */
 #capa {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  padding: 16px; background: rgba(43, 33, 64, .55);
+  position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: rgba(43, 33, 64, .55);
 }
 .panel {
   max-width: 520px; width: 100%; max-height: 100%; overflow: auto; padding: 22px 28px 26px; text-align: center;
@@ -225,9 +226,9 @@ body {
 
 /* ---------- Mapa de niveles ---------- */
 #mapa { position: fixed; inset: 0; z-index: 30; overflow-y: auto; overflow-x: hidden; background: var(--tinta); scrollbar-width: thin; }
-#mapaMundo { position: relative; }
+#mapaMundo { position: relative; margin-bottom: 96px; }
 #mapaLienzo { position: sticky; top: 0; display: block; width: 100%; height: 100vh; }
-#mapaNodos { position: absolute; inset: 0; }
+#mapaNodos { position: absolute; inset: 0; z-index: 3; }
 #mapaTitulo {
   position: fixed; top: 10px; left: 50%; margin: 0; pointer-events: none; z-index: 2;
   transform: translateX(-50%) rotate(-3deg); font-size: clamp(30px, 6vw, 52px);
@@ -427,4 +428,38 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   #pie { gap: 6px; }
   #progreso { width: 50px; }
   #ajustes, #velocidades { gap: 4px; }
+  #ajustes { display: none; }   /* sin sitio: están en el menú de pausa */
+}
+
+/* ---------- Que nada se tape ---------- */
+/* El aviso de girar el móvil desaparece si hay un panel o el tutorial abierto. */
+#app:has(#capa:not(.oculto)) #girar, #app:has(#tutorialCaja:not(.oculto)) #girar { display: none !important; }
+/* Con la ficha de un nivel abierta, los botones del mapa se esconden (quedaban debajo). */
+#mapa:has(#mapaFicha:not(.oculto)) #mapaBotones { display: none; }
+
+@media (orientation: portrait) and (max-width: 700px) {
+  /* Cartel de preparación: en dos líneas si no cabe. */
+  #cartelPrep {
+    width: calc(100% - 16px); white-space: normal; flex-wrap: wrap; justify-content: center; gap: 4px 10px;
+    padding: 5px 10px; text-align: center; font-size: 13px; border-width: 3px; border-radius: 16px;
+  }
+  /* Pantalla de equipo más compacta. */
+  .panel { padding: 16px 14px 18px; }
+  .equipo { gap: 6px; }
+  .ranura { min-width: 46px; }
+  .ranura .vacia { height: 50px; font-size: 20px; border-width: 3px; }
+  .equipo .carta { width: 46px; height: 50px; padding: 1px; border-width: 3px; border-radius: 12px; box-shadow: 0 3px 0 var(--tinta); }
+  .equipo .carta canvas { width: 30px; height: 30px; }
+  .equipo .carta .nombre { display: none; }
+  .equipo .carta .tecla { display: block; top: 0; left: 4px; font-size: 9px; }
+  .flechas button { width: 21px; height: 20px; }
+}
+
+/* Móvil tumbado: la ficha del mapa va a un lateral, no abajo, para no tapar el nivel. */
+@media (orientation: landscape) and (max-height: 520px) {
+  #mapaFicha {
+    left: auto; right: max(10px, env(safe-area-inset-right)); top: 10px; bottom: 10px; transform: none;
+    width: min(330px, 46%); overflow-y: auto;
+  }
+  #mapaFicha.izquierda { right: auto; left: max(10px, env(safe-area-inset-left)); }
 }

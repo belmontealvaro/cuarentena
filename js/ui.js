@@ -193,13 +193,20 @@ CQ.ui = (() => {
     // Herramientas del modo desarrollo (desarrollo.js), si está activo.
     const dev = CQ.desarrollo && CQ.desarrollo.activo() ? CQ.desarrollo.herramientas : [];
     dev.forEach((h, i) => { acciones['dev_' + i] = () => { CQ.app.alternarPausa(); h.hacer(CQ.app.juego); }; });
+    // Interruptores de ajustes (config.js): también aquí, porque en el móvil tumbado no caben en el pie.
+    for (const a of CQ.config.ajustes) acciones['aj_' + a.clave] = () => { CQ.audio.activar(); CQ.ajustes.alternar(a.clave); refrescarAjustes(); mostrarPausa(); };
+    const ajustes = CQ.config.ajustes.map(a => { const si = CQ.ajustes.leer(a.clave);
+      return `<button class="boton ${si ? '' : 'apagado'}" data-accion="aj_${a.clave}">${a.texto}: ${si ? 'sí' : 'no'}</button>`; }).join('');
     panel(`<h2>Pausa</h2><p>Tómate tu tiempo para pensar.</p>
       <button class="boton grande" data-accion="seguir">Continuar</button>
       <button class="boton" data-accion="reiniciar">Reiniciar partida</button>
       <button class="boton" data-accion="mapa">Salir al mapa</button>
+      <div class="opciones">${ajustes}</div>
       ${dev.length ? `<p class="rotulo">Desarrollo</p><div class="opciones">${dev.map((h, i) =>
         `<button class="boton apagado" data-accion="dev_${i}">${h.texto}</button>`).join('')}</div>` : ''}`, acciones);
   }
+
+  function refrescarAjustes() { for (const b of $('ajustes').children) if (b.pintar) b.pintar(); }
 
   /* ---------------- Ratón y teclado ---------------- */
   function celdaDe(ev) {
@@ -264,7 +271,7 @@ CQ.ui = (() => {
     // Un botón por cada ajuste definido en config.js.
     for (const a of CQ.config.ajustes) {
       const b = document.createElement('button');
-      const pintar = () => { const si = CQ.ajustes.leer(a.clave); b.textContent = a.texto + (si ? ': sí' : ': no'); b.classList.toggle('apagado', !si); };
+      const pintar = b.pintar = () => { const si = CQ.ajustes.leer(a.clave); b.innerHTML = `${a.texto}<span class="estado">: ${si ? 'sí' : 'no'}</span>`; b.classList.toggle('apagado', !si); };
       b.className = 'boton'; pintar();
       b.addEventListener('click', () => { CQ.audio.activar(); CQ.ajustes.alternar(a.clave); pintar(); });
       $('ajustes').appendChild(b);

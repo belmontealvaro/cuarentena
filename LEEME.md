@@ -35,6 +35,7 @@ Los módulos no se llaman entre sí: el motor **emite eventos** y la interfaz, e
 | `js/pantalla.js` | Botón de pantalla completa (móvil) | cambiar el modo pantalla completa |
 | `js/tutorial.js` | Nivel de prácticas y lista de pasos del tutorial | añadir o reescribir pasos |
 | `js/main.js` | `CQ.app`: partida actual, pausa, bucle de fotogramas | cambiar el arranque |
+| `herramientas/solapes.js` | Recorre todas las pantallas y avisa si algo se tapa o se sale (úsalo emulando un móvil) | revisar la interfaz tras cambiarla |
 | `herramientas/simulador.js` | Bots que juegan sin pantalla para medir la dificultad | equilibrar con datos |
 
 ## Recetas
