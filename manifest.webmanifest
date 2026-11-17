@@ -1,0 +1,14 @@
+{
+  "name": "Cuarentena",
+  "short_name": "Cuarentena",
+  "description": "Defiende la red casilla a casilla. Juego de estrategia cartoon sobre ciberseguridad.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#2b2140",
+  "theme_color": "#2b2140",
+  "icons": [
+    { "src": "icono.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

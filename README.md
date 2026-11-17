@@ -5,7 +5,7 @@ Juego de estrategia cartoon sobre ciberseguridad. Las amenazas salen de internet
 - **10 niveles** en cinco zonas: casa, oficina, banco, centro de datos y la nube.
 - **10 defensas** que se desbloquean al avanzar y **9 amenazas**, con jefe final.
 - Tres dificultades, con un escudo de bronce, plata u oro por nivel.
-- Funciona en ordenador y en móvil (mejor en horizontal).
+- Funciona en ordenador y en móvil (mejor en horizontal), con botón de pantalla completa. En iPhone, usa **Compartir → Añadir a pantalla de inicio** para jugar a pantalla completa.
 
 ## Jugar
 

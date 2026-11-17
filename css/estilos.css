@@ -14,7 +14,7 @@ body {
   font-weight: 500; color: var(--tinta); background: var(--tinta);
   overflow: hidden; user-select: none; -webkit-user-select: none;
 }
-#app { display: flex; flex-direction: column; height: 100%; }
+#app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }   /* dvh: descuenta las barras del navegador móvil */
 .oculto { display: none !important; }
 
 /* ---------- Barra superior ---------- */
@@ -371,4 +371,60 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .nodo { width: 60px; height: 60px; margin: -30px 0 0 -30px; font-size: 24px; }
   .novedad { margin: 6px 0; padding: 6px 10px; }
   .novedad canvas { width: 54px; height: 54px; }
+}
+
+/* ---------- Borrar progreso y pantalla completa ---------- */
+.boton.peligro { background: var(--rojo); color: #fff; }
+.botonPantalla.lateral { display: none; }
+#mapaFicha .boton { margin: 8px 4px 0; }
+
+/* ---------- Móvil en vertical: las cartas se reparten en filas, sin desplazarse ---------- */
+@media (orientation: portrait) and (max-width: 700px) {
+  #barra { flex-wrap: wrap; align-items: stretch; gap: 6px; overflow: visible; padding-top: 6px; padding-bottom: 8px; border-bottom-width: 4px; }
+  #cpu { height: auto; min-width: 58px; padding: 2px 6px; border-width: 3px; border-radius: 12px; box-shadow: 0 3px 0 var(--tinta); }
+  #cpu .chip { display: none; }
+  #cpu b { font-size: 20px; }
+  #cpu small { font-size: 10px; }
+  #cartas { flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 6px; }
+  .carta { width: auto; height: 50px; padding: 1px; border-width: 3px; border-radius: 12px; box-shadow: 0 3px 0 var(--tinta); }
+  .carta canvas { width: 30px; height: 30px; }
+  .carta .nombre, .carta .tecla { display: none; }
+  .carta .coste { font-size: 11px; padding: 0 5px; margin-top: 0; border-width: 2px; }
+  .carta.herramienta { width: 46px; height: auto; margin-left: 0; }
+  .carta .aspa { font-size: 22px; }
+  #pie { gap: 6px 8px; font-size: 12px; padding-top: 5px; padding-bottom: max(5px, env(safe-area-inset-bottom)); }
+  #pie .boton { padding: 2px 9px; font-size: 12px; }
+  #ayuda, #restantes { display: none; }
+  #progreso { width: 70px; }
+  #ajustes, #velocidades { flex-wrap: wrap; gap: 6px; }
+  #app { max-width: 100vw; overflow: hidden; }
+}
+
+/* ---------- Móvil en horizontal: las cartas pasan a una columna a la izquierda ----------
+   Así el tablero aprovecha toda la altura, que es lo que escasea con el móvil tumbado. */
+@media (orientation: landscape) and (max-height: 520px) {
+  #app {
+    display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto;
+  }
+  #barra {
+    grid-row: 1 / 3; flex-direction: column; align-items: stretch; gap: 5px; overflow-x: hidden; overflow-y: auto;
+    padding: max(5px, env(safe-area-inset-top)) 6px 6px max(6px, env(safe-area-inset-left));
+    border-bottom: none; border-right: 4px solid var(--tinta);
+  }
+  #zona { grid-column: 2; grid-row: 1; }
+  #pie { grid-column: 2; grid-row: 2; padding-right: max(8px, env(safe-area-inset-right)); }
+  #cpu { flex-direction: row; gap: 5px; height: 34px; min-width: 0; flex: none; }
+  #cpu b { font-size: 18px; }
+  #cartas { display: grid; grid-template-columns: repeat(2, 46px); gap: 5px; }
+  .carta { width: 46px; height: 48px; padding: 1px; }
+  .carta canvas { width: 28px; height: 28px; }
+  .carta.herramienta { width: auto; height: 32px; margin: auto 0 0; flex-direction: row; flex: none; }
+  .carta.herramienta .nombre { display: inline; font-size: 12px; }
+  .carta .aspa { font-size: 18px; }
+  #girar { display: none !important; }
+  .botonPantalla.lateral { display: block; flex: none; font-size: 11px; line-height: 1.1; padding: 4px 6px; border-width: 3px; box-shadow: 0 3px 0 var(--tinta); }
+  #pie .botonPantalla { display: none; }
+  #pie { gap: 6px; }
+  #progreso { width: 50px; }
+  #ajustes, #velocidades { gap: 4px; }
 }

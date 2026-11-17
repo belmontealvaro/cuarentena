@@ -32,6 +32,7 @@ Los módulos no se llaman entre sí: el motor **emite eventos** y la interfaz, e
 | `js/desarrollo.js` | Modo desarrollo: niveles abiertos y herramientas en la pausa | añadir un atajo de pruebas |
 | `js/mapa.js` | Pantalla de inicio: mapa desplazable, ficha de nivel, progreso | cambiar el comportamiento del mapa |
 | `js/enciclopedia.js` | Fichas de amenazas y defensas ya vistas | cambiar la enciclopedia |
+| `js/pantalla.js` | Botón de pantalla completa (móvil) | cambiar el modo pantalla completa |
 | `js/tutorial.js` | Nivel de prácticas y lista de pasos del tutorial | añadir o reescribir pasos |
 | `js/main.js` | `CQ.app`: partida actual, pausa, bucle de fotogramas | cambiar el arranque |
 | `herramientas/simulador.js` | Bots que juegan sin pantalla para medir la dificultad | equilibrar con datos |

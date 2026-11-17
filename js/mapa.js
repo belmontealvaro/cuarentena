@@ -95,11 +95,8 @@ CQ.mapa = (() => {
     lienzo = $('mapaLienzo'); ctx = lienzo.getContext('2d'); capaNodos = $('mapaNodos'); ficha = $('mapaFicha');
     window.addEventListener('resize', () => { if (visible) colocarNodos(); });
     $('mapaEnciclopedia').addEventListener('click', () => CQ.enciclopedia && CQ.enciclopedia.abrir());
-    $('mapaBorrar').addEventListener('click', () => {
-      if (!window.confirm('¿Borrar todo tu progreso? Perderás los escudos, los récords y el orden de tu equipo.')) return;
-      CQ.ajustes.borrar(['progreso', 'novedadesVistas', 'tutorialVisto', 'equipo']);
-      abrir();
-    });
+    $('mapaBorrar').addEventListener('click', confirmarBorrado);
+    if (CQ.pantalla) CQ.pantalla.boton($('mapaBotones'));
     if (CQ.desarrollo && CQ.desarrollo.disponible) {   // el botón DEV solo sale con ?dev
       const b = $('mapaDev');
       b.classList.remove('oculto');
@@ -182,6 +179,26 @@ CQ.mapa = (() => {
     acciones.cerrar = cerrarFicha;
     ficha.querySelectorAll('[data-accion]').forEach(b => b.addEventListener('click', () => acciones[b.dataset.accion]()));
     ficha.classList.remove('oculto');
+  }
+
+  /* Borrar progreso: dos pasos, y en los dos el botón grande es el que NO borra. */
+  function confirmarBorrado() {
+    const superados = CQ.niveles.filter(n => superadoEnAlguna(n.id)).length;
+    pintarFicha(`<h2>¿Borrar tu progreso?</h2>
+      <p>Perderás los escudos de <b>${superados}</b> ${superados === 1 ? 'nivel' : 'niveles'}, los récords y el orden de tu equipo.</p>
+      <button class="boton grande" data-accion="cancelar">No, conservarlo</button>
+      <button class="boton apagado" data-accion="seguir">Sí, quiero borrarlo</button>`,
+      {
+        cancelar: cerrarFicha,
+        seguir: () => pintarFicha(`<h2 class="alerta">¿Seguro del todo?</h2>
+          <p>Esto <b>no se puede deshacer</b>. Volverás a empezar desde el nivel 1.</p>
+          <button class="boton grande" data-accion="cancelar">No, me arrepiento</button>
+          <button class="boton peligro" data-accion="borrar">Borrar definitivamente</button>`,
+          {
+            cancelar: cerrarFicha,
+            borrar: () => { CQ.ajustes.borrar(['progreso', 'novedadesVistas', 'tutorialVisto', 'equipo']); abrir(); },
+          }),
+      });
   }
 
   /* ---------------- Abrir y cerrar ---------------- */

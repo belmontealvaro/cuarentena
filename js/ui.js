@@ -269,6 +269,10 @@ CQ.ui = (() => {
       b.addEventListener('click', () => { CQ.audio.activar(); CQ.ajustes.alternar(a.clave); pintar(); });
       $('ajustes').appendChild(b);
     }
+    if (CQ.pantalla) {
+      CQ.pantalla.boton($('ajustes'));
+      CQ.pantalla.boton($('barra'), 'lateral');   // en el móvil tumbado va en la columna de cartas (CSS)
+    }
 
     // Solo se atiende a la partida que está en pantalla (no a simulaciones).
     const mia = d => d.juego === CQ.app.juego;
