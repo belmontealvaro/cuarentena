@@ -100,7 +100,7 @@ CQ.mapa = (() => {
       CQ.ajustes.borrar(['progreso', 'novedadesVistas', 'tutorialVisto', 'equipo']);
       abrir();
     });
-    if (CQ.desarrollo) {
+    if (CQ.desarrollo && CQ.desarrollo.disponible) {   // el botón DEV solo sale con ?dev
       const b = $('mapaDev');
       b.classList.remove('oculto');
       b.addEventListener('click', () => { CQ.desarrollo.alternar(); pintarDev(); cerrarFicha(); colocarNodos(); });
@@ -108,7 +108,7 @@ CQ.mapa = (() => {
   }
 
   function pintarDev() {
-    if (!CQ.desarrollo) return;
+    if (!CQ.desarrollo || !CQ.desarrollo.disponible) return;
     const si = CQ.desarrollo.activo();
     $('mapaDev').textContent = 'DEV: ' + (si ? 'sí' : 'no');
     $('mapaDev').classList.toggle('apagado', !si);

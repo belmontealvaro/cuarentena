@@ -1,7 +1,8 @@
 /* ============================================================
    DESARROLLO — atajos para probar el juego sin pasarse los niveles.
-   Se activa con el botón "DEV" de la esquina del mapa, o abriendo
-   el juego con ?dev en la dirección. Se recuerda entre sesiones.
+   Solo existe si el juego se abre con ?dev en la dirección
+   (por ejemplo index.html?dev). Así no aparece en la web pública.
+   Con ?dev sale el botón "DEV" en el mapa para apagarlo y encenderlo.
 
    Con el modo activo:
      - Todos los niveles del mapa están abiertos.
@@ -10,8 +11,8 @@
    Si se borra este archivo, el juego funciona igual (sin modo DEV).
    ============================================================ */
 CQ.desarrollo = (() => {
-  const porDireccion = /[?&]dev\b/.test(location.search);
-  const activo = () => porDireccion || !!CQ.ajustes.leer('desarrollo');
+  const disponible = /[?&]dev\b/.test(location.search);
+  const activo = () => disponible && !CQ.ajustes.leer('desarrolloApagado');
 
   /* Cada herramienta: texto del botón y qué hace con la partida en curso. */
   const herramientas = [
@@ -22,9 +23,9 @@ CQ.desarrollo = (() => {
   ];
 
   function alternar() {
-    CQ.ajustes.guardar('desarrollo', !CQ.ajustes.leer('desarrollo'));
+    CQ.ajustes.guardar('desarrolloApagado', !CQ.ajustes.leer('desarrolloApagado'));
     return activo();
   }
 
-  return { activo, alternar, herramientas, fijoPorDireccion: porDireccion };
+  return { activo, alternar, herramientas, disponible };
 })();

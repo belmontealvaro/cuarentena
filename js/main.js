@@ -56,7 +56,7 @@ function limpiarGuardadoAntiguo() {
     for (const clave of Object.keys(localStorage)) if (clave.startsWith('cuarentena_record')) localStorage.removeItem(clave);
   } catch (e) { /* sin almacenamiento */ }
   CQ.ajustes._cargar();
-  const viejas = Object.keys(CQ.ajustes._valores).filter(c => c.startsWith('equipo_'));
+  const viejas = Object.keys(CQ.ajustes._valores).filter(c => c.startsWith('equipo_') || c === 'desarrollo');
   if (viejas.length) CQ.ajustes.borrar(viejas);
 }
 

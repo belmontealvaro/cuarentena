@@ -85,7 +85,7 @@ Los archivos se cargan con `?v=N` en `index.html` para saltarse la caché del na
 
 ## Modo desarrollo
 
-Botón **DEV** en la esquina inferior izquierda del mapa, o abrir con `?dev` en la dirección. Abre todos los niveles y añade al menú de pausa: ganar el nivel, +500 CPU, limpiar amenazas y saltar la preparación. Las herramientas son una lista en `desarrollo.js`.
+Abre el juego con `?dev` en la dirección (por ejemplo `index.html?dev` o la web pública terminada en `/?dev`). Sin eso no existe, así que no aparece a los jugadores. Con `?dev` sale el botón **DEV** en el mapa para encenderlo o apagarlo. Abre todos los niveles y añade al menú de pausa: ganar el nivel, +500 CPU, limpiar amenazas y saltar la preparación. Las herramientas son una lista en `desarrollo.js`.
 
 ## Probar
 
