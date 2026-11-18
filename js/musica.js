@@ -62,7 +62,7 @@ CQ.musica = (() => {
   };
 
   function programar(i, cuando, dur) {
-    const salida = CQ.audio.salida('musica'), vol = atenuada ? 0.35 : 1;
+    const salida = volumenPista;
     for (const pista in instrumentos) {
       // La melodía alterna dos frases (melodia y melodiaB) y calla una vuelta de cada cuatro.
       let partitura = actual[pista];
@@ -75,32 +75,53 @@ CQ.musica = (() => {
       const valor = partitura[i % partitura.length];
       if (valor == null || valor === '.') continue;
       const c = instrumentos[pista](actual.tonica + (typeof valor === 'number' ? valor : 0), dur);
-      c.vol *= vol;
       CQ.audio.capa(c, cuando, salida);
     }
+  }
+
+  /* Antelación con la que se programan las notas. Con poca, la música se corta
+     cuando el navegador retrasa los temporizadores (p. ej. el navegador integrado
+     de Instagram mientras procesa toques). Las notas ya programadas suenan aunque
+     la página esté ocupada; parar y atenuar actúan al instante sobre "volumenPista". */
+  const ANTELACION = 1;
+  let volumenPista = null;   // volumen propio de la canción en curso
+
+  function nuevaPista(ctx) {
+    if (volumenPista) volumenPista.disconnect();   // corta lo que quedara programado
+    volumenPista = ctx.createGain();
+    volumenPista.gain.value = atenuada ? 0.35 : 1;
+    volumenPista.connect(CQ.audio.salida('musica'));
   }
 
   function latido() {
     const ctx = CQ.audio.contexto();
     if (!ctx || !actual || ctx.state !== 'running') return;
+    if (!volumenPista) nuevaPista(ctx);
     const dur = 60 / actual.bpm / 4;
     if (siguiente < ctx.currentTime) siguiente = ctx.currentTime + 0.05;   // tras una pausa del navegador
-    while (siguiente < ctx.currentTime + 0.2) { programar(paso++, siguiente, dur); siguiente += dur; }
+    while (siguiente < ctx.currentTime + ANTELACION) { programar(paso++, siguiente, dur); siguiente += dur; }
   }
 
   function poner(id) {
     if (actual && actual.id === id) return;
     actual = CQ.musicas[id] || null; paso = 0; siguiente = 0;
+    if (volumenPista) { volumenPista.disconnect(); volumenPista = null; }
     if (!reloj) reloj = setInterval(latido, 50);
   }
-  function parar() { actual = null; }
+  function parar() { actual = null; if (volumenPista) { volumenPista.disconnect(); volumenPista = null; } }
+
+  function atenuar(si) {
+    atenuada = si;
+    const ctx = CQ.audio.contexto();
+    if (volumenPista && ctx) volumenPista.gain.setTargetAtTime(si ? 0.35 : 1, ctx.currentTime, 0.05);
+  }
 
   const mia = d => CQ.app && d.juego === CQ.app.juego;
   CQ.eventos.on('partidaNueva', d => { if (mia(d)) { atenuada = false; poner(d.juego.fase.musica); } });
   CQ.eventos.on('faseIniciada', d => { if (mia(d)) poner(d.juego.fase.musica); });
   CQ.eventos.on('victoria', d => { if (mia(d)) parar(); });
   CQ.eventos.on('derrota', d => { if (mia(d)) parar(); });
-  CQ.eventos.on('pausa', d => { atenuada = d.activa; });
+  CQ.eventos.on('pausa', d => atenuar(d.activa));
 
   return { poner, parar };
 })();
