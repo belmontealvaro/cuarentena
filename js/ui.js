@@ -218,6 +218,8 @@ CQ.ui = (() => {
   function alPulsar(ev) {
     const juego = CQ.app.juego;
     if (!juego || CQ.app.pausa || ev.button === 2) return;
+    // Algunos navegadores de móvil pausan el audio por su cuenta; cada toque lo reactiva.
+    CQ.audio.activar();
     const c = celdaDe(ev);
     if (juego.recogerChipEn(c.x, c.y)) return;             // los chips tienen prioridad
     if (!vista.herramienta) return;
@@ -232,7 +234,12 @@ CQ.ui = (() => {
   /* Intenta desplegar una defensa; si no se puede, muestra el motivo sobre la casilla. */
   function colocarEn(juego, id, fila, col) {
     const motivo = juego.colocar(id, fila, col);
-    if (motivo) juego.fx.texto(col + 0.5, fila + 0.3, motivo, '#ff5d73');
+    if (motivo) {
+      // Si ya hay un aviso igual en esa casilla, se reinicia en vez de apilar otro encima.
+      const previo = juego.efectos.find(e => e.tipo === 'texto' && e.cadena === motivo && e.casilla === fila + ',' + col);
+      if (previo) { previo.vida = previo.max; previo.y = fila + 0.3; }
+      else { juego.fx.texto(col + 0.5, fila + 0.3, motivo, '#ff5d73'); juego.efectos[juego.efectos.length - 1].casilla = fila + ',' + col; }
+    }
     else if (vista.herramienta) elegir(null);
   }
 

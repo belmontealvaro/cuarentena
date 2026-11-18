@@ -71,7 +71,13 @@ CQ.audio = (() => {
   function activar() {
     try {
       if (!ctx) {
-        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        // En móviles (sobre todo en navegadores integrados como el de Instagram) el búfer
+        // por defecto es tan pequeño que el audio se entrecorta al tocar la pantalla.
+        // 'playback' le da más margen a cambio de unos milisegundos de retraso.
+        const Contexto = window.AudioContext || window.webkitAudioContext;
+        const tactil = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+        try { ctx = new Contexto(tactil ? { latencyHint: 'playback' } : undefined); }
+        catch (e) { ctx = new Contexto(); }
         salidas = { sonido: ctx.createGain(), musica: ctx.createGain() };
         salidas.sonido.connect(ctx.destination); salidas.musica.connect(ctx.destination);
         const n = ctx.sampleRate;   // un segundo de ruido blanco reutilizable
@@ -80,7 +86,7 @@ CQ.audio = (() => {
         for (let i = 0; i < n; i++) datos[i] = Math.random() * 2 - 1;
         aplicarAjustes();
       }
-      ctx.resume();
+      if (ctx.state !== 'running') ctx.resume();
     } catch (e) { /* sin sonido */ }
   }
 
