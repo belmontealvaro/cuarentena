@@ -83,7 +83,7 @@ CQ.musica = (() => {
      cuando el navegador retrasa los temporizadores (p. ej. el navegador integrado
      de Instagram mientras procesa toques). Las notas ya programadas suenan aunque
      la página esté ocupada; parar y atenuar actúan al instante sobre "volumenPista". */
-  const ANTELACION = 1;
+  const ANTELACION = 2.5;
   let volumenPista = null;   // volumen propio de la canción en curso
 
   function nuevaPista(ctx) {
